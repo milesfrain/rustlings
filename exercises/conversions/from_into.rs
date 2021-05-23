@@ -33,10 +33,45 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of Person
 // Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
+// Could be pretty clean solution with collect_tuple()
+// but need to install this crate
+// use itertools::Itertools;
+// https://stackoverflow.com/a/61555349
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        // let res = s.split(',').collect_tuple();
+        // let res = s.split(',').collect();
+        // let v = vec![1, 2, 3];
+        // match &v[..] {
+
+        let mut i = s.split(',');
+        // question - how to chain Option and Result (downgrade / hush to Option)
+        // Is closure required?
+        /*
+        match (i.next(), (|| {i.next()?.parse::<usize>()})(), i.next()) {
+            (Some(first), Ok(age), None) => Person {name: String::from(first), age:5},
+            // &[first, second, ..] => Person::default(),
+            // &[first, second, ..] => Person {name: String::from(first), age:5},
+            // Some((name, age)) => Person::default(),
+            _ => Person::default(),
+        };
+        */
+        // Would be nice to be able to chain all of these together
+        // https://github.com/rust-lang/rfcs/pull/2497
+        // if let Some(name) = i.next() && name.len() != 0 {
+        if let Some(name) = i.next() {
+            if name.len() != 0 {
+                if let Some(age_str) = i.next() {
+                    if let Ok(age) = age_str.parse::<usize>() {
+                        if i.next() == None {
+                            return Person {name: String::from(name), age};
+                        }
+                    }
+                }
+            }
+        }
+        Person::default()
     }
 }
 

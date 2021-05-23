@@ -12,8 +12,6 @@ struct Color {
     blue: u8,
 }
 
-// I AM NOT DONE
-
 // Your task is to complete this implementation
 // and return an Ok result of inner type Color.
 // You need to create an implementation for a tuple of three integers,
@@ -26,19 +24,54 @@ struct Color {
 // Tuple implementation
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = Box<dyn error::Error>;
-    fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {}
+    /*
+    fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let red = u8::try_from(tuple.0)?;
+        let green = u8::try_from(tuple.1)?;
+        let blue = u8::try_from(tuple.2)?;
+    */
+    fn try_from((r,g,b): (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let red = u8::try_from(r)?;
+        let green = u8::try_from(g)?;
+        let blue = u8::try_from(b)?;
+        Ok(Color{red, green, blue})
+    }
 }
 
 // Array implementation
 impl TryFrom<[i16; 3]> for Color {
     type Error = Box<dyn error::Error>;
-    fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {}
+    /*
+    fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let red = u8::try_from(arr[0])?;
+        let green = u8::try_from(arr[1])?;
+        let blue = u8::try_from(arr[2])?;
+        Ok(Color{red, green, blue})
+    */
+    fn try_from([r,g,b]: [i16; 3]) -> Result<Self, Self::Error> {
+        let red = u8::try_from(r)?;
+        let green = u8::try_from(g)?;
+        let blue = u8::try_from(b)?;
+        Ok(Color{red, green, blue})
+    }
 }
 
 // Slice implementation
 impl TryFrom<&[i16]> for Color {
     type Error = Box<dyn error::Error>;
-    fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {}
+    fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        match slice {
+            &[r,g,b] => {
+                let red = u8::try_from(r)?;
+                let green = u8::try_from(g)?;
+                let blue = u8::try_from(b)?;
+                Ok(Color{red, green, blue})
+            },
+            // Either of these work:
+            // _ => Err("Bad length".into()),
+            _ => Err("Bad length")?,
+        }
+    }
 }
 
 fn main() {
