@@ -14,6 +14,16 @@ struct Order {
     count: u32,
 }
 
+struct Foo {
+    name: String,
+    year: u32,
+    made_by_phone: bool,
+    made_by_mobile: bool,
+    made_by_email: bool,
+    item_number: u32,
+    count: u32,
+}
+
 fn create_order_template() -> Order {
     Order {
         name: String::from("Bob"),
@@ -33,8 +43,13 @@ mod tests {
     #[test]
     fn your_order() {
         let order_template = create_order_template();
-        // TODO: Create your own order using the update syntax and template above!
-        // let your_order =
+        // Interesting, can't update one struct type to another
+        // let your_order = Foo {
+        let your_order = Order {
+            name: String::from("Hacker in Rust"),
+            count: 1,
+            ..order_template
+        };
         assert_eq!(your_order.name, "Hacker in Rust");
         assert_eq!(your_order.year, order_template.year);
         assert_eq!(your_order.made_by_phone, order_template.made_by_phone);
